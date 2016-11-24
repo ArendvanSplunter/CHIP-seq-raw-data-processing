@@ -1,0 +1,291 @@
+"""Results of actual procedures"""
+
+bash-3.2$ samtools sort -m 12G GSM1341952.mm10.bam > GSM1341952.mm10.sorted.bam
+[bam_sort_core] merging from 2 files...
+
+samtools sort -m 12G GSM1341951.mm10.bam > GSM1341951.mm10.sorted.bam
+"""Should sort GSM1341951.mm10.bam using 12Gigabites of work memory and write the results to GSM1341951.mm10.sorted.bam"""
+
+picard MarkDuplicates ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT I=GSM1341938.mm10.sorted.bam O=GSM1341938.mm10.sorted.mup.bam M=GSM1341938.mm10.sorted.markdup.txt
+""" Errors after executing the command: Ignoring SAM validation error: ERROR: Record 26377122, Read name SRR1185473.27122912, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 26378404, Read name SRR1185473.23466507, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 26608339, Read name SRR1185473.16600327, MAPQ should be 0 for unmapped read.
+INFO	2016-11-22 10:18:07	MarkDuplicates	Before output close freeMemory: 775699624; totalMemory: 785383424; maxMemory: 954728448
+INFO	2016-11-22 10:18:07	MarkDuplicates	After output close freeMemory: 775698672; totalMemory: 785383424; maxMemory: 954728448
+[Tue Nov 22 10:18:07 CET 2016] picard.sam.markduplicates.MarkDuplicates done. Elapsed time: 6.01 minutes.
+Runtime.totalMemory()=785383424 """
+
+bash-3.2$ samtools index GSM1341951.mm10.sorted.markdup.bam
+bash-3.2$ samtools flagstat GSM1341951.mm10.sorted.markdup.bam
+""" flagstat output: 28387962 + 0 in total (QC-passed reads + QC-failed reads)
+0 + 0 secondary
+0 + 0 supplementary
+3228359 + 0 duplicates
+27734886 + 0 mapped (97.70% : N/A)
+0 + 0 paired in sequencing
+0 + 0 read1
+0 + 0 read2
+0 + 0 properly paired (N/A : N/A)
+0 + 0 with itself and mate mapped
+0 + 0 singletons (N/A : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)"""
+
+"""bash-3.2$ samtools flagstat GSM1341952.mm10.sorted.markdup.bam
+42116309 + 0 in total (QC-passed reads + QC-failed reads)
+0 + 0 secondary
+0 + 0 supplementary
+1690336 + 0 duplicates
+41105591 + 0 mapped (97.60% : N/A)
+0 + 0 paired in sequencing
+0 + 0 read1
+0 + 0 read2
+0 + 0 properly paired (N/A : N/A)
+0 + 0 with itself and mate mapped
+0 + 0 singletons (N/A : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)"""
+
+"""Preparing GSM*52.trimmed.fastq.gz file in same way as GSM*51.trimmed.fastq.gz"""
+bash-3.2$ bwa aln -t 12 ~/anaconda/bin/mm10.fa GSM1341952.trimmed.fastq.gz | bwa samse ~/anaconda/bin/mm10.fa - GSM1341952.trimmed.fastq.gz | samtools view -Sb - > GSM1341952.mm10.bam
+
+bash-3.2$ picard MarkDuplicates ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT I=GSM1938.mm10.sorted.bam O=GSM1341938.mm10.sorted.mup.bam M=GSM1341938.mm10.sorted.markdup.txt
+[Tue Nov 22 14:49:45 CET 2016] picard.sam.markduplicates.MarkDuplicates INPUT=[GSM1341938.mm10.sorted.bam] OUTPUT=GSM1341938.mm10.sorted.mup.bam METRICS_FILE=GSM1341938.mm10.sorted.markdup.txt ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT    MAX_SEQUENCES_FOR_DISK_READ_ENDS_MAP=50000 MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=8000 SORTING_COLLECTION_SIZE_RATIO=0.25 REMOVE_SEQUENCING_DUPLICATES=false TAGGING_POLICY=DontTag REMOVE_DUPLICATES=false DUPLICATE_SCORING_STRATEGY=SUM_OF_BASE_QUALITIES PROGRAM_RECORD_ID=MarkDuplicates PROGRAM_GROUP_NAME=MarkDuplicates READ_NAME_REGEX=<optimized capture of last three ':' separated fields as numeric values> OPTICAL_DUPLICATE_PIXEL_DISTANCE=100 VERBOSITY=INFO QUIET=false COMPRESSION_LEVEL=5 MAX_RECORDS_IN_RAM=500000 CREATE_INDEX=false CREATE_MD5_FILE=false GA4GH_CLIENT_SECRETS=client_secrets.json
+[Tue Nov 22 14:49:45 CET 2016] Executing as AJ@Arends-MacBook-Pro-3.local on Mac OS X 10.10.5 x86_64; OpenJDK 64-Bit Server VM 1.8.0_92-b15; Picard version: 2.5.0(2c370988aefe41f579920c8a6a678a201c5261c1_1466708365)
+INFO	2016-11-22 14:49:46	MarkDuplicates	Start of doWork freeMemory: 510563320; totalMemory: 514850816; maxMemory: 954728448
+INFO	2016-11-22 14:49:46	MarkDuplicates	Reading input file and constructing read end information.
+INFO	2016-11-22 14:49:46	MarkDuplicates	Will retain up to 3672032 data points before spilling to disk.
+WARNING	2016-11-22 14:49:46	AbstractOpticalDuplicateFinderCommandLineProgram	A field field parsed out of a read name was expected to contain an integer and did not. Read name: SRR1185460.9315806. Cause: String 'SRR1185460.9315806' did not start with a parsable number.
+INFO	2016-11-22 14:49:50	MarkDuplicates	Read     1,000,000 records.  Elapsed time: 00:00:04s.  Time for last 1,000,000:    4s.  Last read position: chr1:135,034,481
+INFO	2016-11-22 14:49:50	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:49:53	MarkDuplicates	Read     2,000,000 records.  Elapsed time: 00:00:07s.  Time for last 1,000,000:    3s.  Last read position: chr10:68,998,178
+INFO	2016-11-22 14:49:53	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:49:57	MarkDuplicates	Read     3,000,000 records.  Elapsed time: 00:00:10s.  Time for last 1,000,000:    3s.  Last read position: chr11:54,894,761
+INFO	2016-11-22 14:49:57	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:01	MarkDuplicates	Read     4,000,000 records.  Elapsed time: 00:00:15s.  Time for last 1,000,000:    4s.  Last read position: chr12:23,084,860
+INFO	2016-11-22 14:50:01	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:05	MarkDuplicates	Read     5,000,000 records.  Elapsed time: 00:00:18s.  Time for last 1,000,000:    3s.  Last read position: chr13:31,713,913
+INFO	2016-11-22 14:50:05	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:08	MarkDuplicates	Read     6,000,000 records.  Elapsed time: 00:00:22s.  Time for last 1,000,000:    3s.  Last read position: chr14:25,190,520
+INFO	2016-11-22 14:50:08	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:11	MarkDuplicates	Read     7,000,000 records.  Elapsed time: 00:00:25s.  Time for last 1,000,000:    3s.  Last read position: chr15:29,592,689
+INFO	2016-11-22 14:50:11	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:16	MarkDuplicates	Read     8,000,000 records.  Elapsed time: 00:00:30s.  Time for last 1,000,000:    4s.  Last read position: chr16:34,824,067
+INFO	2016-11-22 14:50:16	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:20	MarkDuplicates	Read     9,000,000 records.  Elapsed time: 00:00:34s.  Time for last 1,000,000:    3s.  Last read position: chr17:49,941,608
+INFO	2016-11-22 14:50:20	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:23	MarkDuplicates	Read    10,000,000 records.  Elapsed time: 00:00:37s.  Time for last 1,000,000:    3s.  Last read position: chr18:82,745,216
+INFO	2016-11-22 14:50:23	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:27	MarkDuplicates	Read    11,000,000 records.  Elapsed time: 00:00:40s.  Time for last 1,000,000:    3s.  Last read position: chr2:45,297,395
+INFO	2016-11-22 14:50:27	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:31	MarkDuplicates	Read    12,000,000 records.  Elapsed time: 00:00:45s.  Time for last 1,000,000:    4s.  Last read position: chr2:108,670,178
+INFO	2016-11-22 14:50:31	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:35	MarkDuplicates	Read    13,000,000 records.  Elapsed time: 00:00:49s.  Time for last 1,000,000:    4s.  Last read position: chr3:42,513,830
+INFO	2016-11-22 14:50:35	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:39	MarkDuplicates	Read    14,000,000 records.  Elapsed time: 00:00:53s.  Time for last 1,000,000:    4s.  Last read position: chr4:19,693,703
+INFO	2016-11-22 14:50:39	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:44	MarkDuplicates	Read    15,000,000 records.  Elapsed time: 00:00:57s.  Time for last 1,000,000:    4s.  Last read position: chr4:136,434,745
+INFO	2016-11-22 14:50:44	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:48	MarkDuplicates	Read    16,000,000 records.  Elapsed time: 00:01:01s.  Time for last 1,000,000:    3s.  Last read position: chr5:92,707,456
+INFO	2016-11-22 14:50:48	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:51	MarkDuplicates	Read    17,000,000 records.  Elapsed time: 00:01:05s.  Time for last 1,000,000:    3s.  Last read position: chr6:39,349,538
+INFO	2016-11-22 14:50:51	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:55	MarkDuplicates	Read    18,000,000 records.  Elapsed time: 00:01:09s.  Time for last 1,000,000:    3s.  Last read position: chr7:17,161,816
+INFO	2016-11-22 14:50:55	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:50:59	MarkDuplicates	Read    19,000,000 records.  Elapsed time: 00:01:13s.  Time for last 1,000,000:    4s.  Last read position: chr7:129,586,543
+INFO	2016-11-22 14:50:59	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:51:03	MarkDuplicates	Read    20,000,000 records.  Elapsed time: 00:01:17s.  Time for last 1,000,000:    3s.  Last read position: chr8:82,836,801
+INFO	2016-11-22 14:51:03	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:51:07	MarkDuplicates	Read    21,000,000 records.  Elapsed time: 00:01:21s.  Time for last 1,000,000:    3s.  Last read position: chr9:3,020,503
+INFO	2016-11-22 14:51:07	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:51:10	MarkDuplicates	Read    22,000,000 records.  Elapsed time: 00:01:24s.  Time for last 1,000,000:    3s.  Last read position: chr9:84,793,523
+INFO	2016-11-22 14:51:10	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+Ignoring SAM validation error: ERROR: Record 22380900, Read name SRR1185460.9067058, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380901, Read name SRR1185460.10008163, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380902, Read name SRR1185460.4429593, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380903, Read name SRR1185460.6712717, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380904, Read name SRR1185460.8960397, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380905, Read name SRR1185460.13317684, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380906, Read name SRR1185460.14508408, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380907, Read name SRR1185460.633367, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380908, Read name SRR1185460.11166755, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380909, Read name SRR1185460.16524365, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380910, Read name SRR1185460.19111738, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22398548, Read name SRR1185460.14157994, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22398549, Read name SRR1185460.25910159, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22398550, Read name SRR1185460.22503164, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22977742, Read name SRR1185460.1909617, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22977744, Read name SRR1185460.26316815, MAPQ should be 0 for unmapped read.
+INFO	2016-11-22 14:51:15	MarkDuplicates	Read    23,000,000 records.  Elapsed time: 00:01:29s.  Time for last 1,000,000:    4s.  Last read position: chrX:8,120,460
+INFO	2016-11-22 14:51:15	MarkDuplicates	Tracking 0 as yet unmatched pairs. 0 records in RAM.
+INFO	2016-11-22 14:51:19	MarkDuplicates	Read 23876796 records. 0 pairs never matched.
+INFO	2016-11-22 14:51:19	MarkDuplicates	After buildSortedReadEndLists freeMemory: 766588064; totalMemory: 790102016; maxMemory: 954728448
+INFO	2016-11-22 14:51:19	MarkDuplicates	Will retain up to 29835264 duplicate indices before spilling to disk.
+INFO	2016-11-22 14:51:19	MarkDuplicates	Traversing read pair information and detecting duplicates.
+INFO	2016-11-22 14:51:19	MarkDuplicates	Traversing fragment information and detecting duplicates.
+INFO	2016-11-22 14:51:25	MarkDuplicates	Sorting list of duplicate records.
+INFO	2016-11-22 14:51:26	MarkDuplicates	After generateDuplicateIndexes freeMemory: 526685368; totalMemory: 773849088; maxMemory: 954728448
+INFO	2016-11-22 14:51:26	MarkDuplicates	Marking 7122613 records as duplicates.
+INFO	2016-11-22 14:51:26	MarkDuplicates	Found 0 optical duplicate clusters.
+INFO	2016-11-22 14:51:26	MarkDuplicates	Reads are assumed to be ordered by: coordinate
+INFO	2016-11-22 14:52:52	MarkDuplicates	Written    10,000,000 records.  Elapsed time: 00:01:26s.  Time for last 10,000,000:   86s.  Last read position: chr18:82,745,216
+INFO	2016-11-22 14:54:21	MarkDuplicates	Written    20,000,000 records.  Elapsed time: 00:02:55s.  Time for last 10,000,000:   88s.  Last read position: chr8:82,836,801
+Ignoring SAM validation error: ERROR: Record 22380900, Read name SRR1185460.9067058, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380901, Read name SRR1185460.10008163, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380902, Read name SRR1185460.4429593, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380903, Read name SRR1185460.6712717, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380904, Read name SRR1185460.8960397, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380905, Read name SRR1185460.13317684, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380906, Read name SRR1185460.14508408, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380907, Read name SRR1185460.633367, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380908, Read name SRR1185460.11166755, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380909, Read name SRR1185460.16524365, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22380910, Read name SRR1185460.19111738, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22398548, Read name SRR1185460.14157994, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22398549, Read name SRR1185460.25910159, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22398550, Read name SRR1185460.22503164, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22977742, Read name SRR1185460.1909617, MAPQ should be 0 for unmapped read.
+Ignoring SAM validation error: ERROR: Record 22977744, Read name SRR1185460.26316815, MAPQ should be 0 for unmapped read.
+INFO	2016-11-22 14:55:11	MarkDuplicates	Before output close freeMemory: 793617384; totalMemory: 803209216; maxMemory: 954728448
+INFO	2016-11-22 14:55:11	MarkDuplicates	After output close freeMemory: 793616432; totalMemory: 803209216; maxMemory: 954728448
+[Tue Nov 22 14:55:11 CET 2016] picard.sam.markduplicates.MarkDuplicates done. Elapsed time: 5.43 minutes.
+Runtime.totalMemory()=803209216
+
+bash-3.2$ samtools flagstat GSM1341938.mm10.sorted.mup.bam
+26308068 + 0 in total (QC-passed reads + QC-failed reads)
+0 + 0 secondary
+0 + 0 supplementary
+7122613 + 0 duplicates
+23876779 + 0 mapped (90.76% : N/A)
+0 + 0 paired in sequencing
+0 + 0 read1
+0 + 0 read2
+0 + 0 properly paired (N/A : N/A)
+0 + 0 with itself and mate mapped
+0 + 0 singletons (N/A : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+bash-3.2$ fetchChromSizes mm10 > mm10.genome
+INFO: trying FTP /usr/bin/ftp for database mm10
+url: ftp://hgdownload.cse.ucsc.edu/goldenPath/mm10/database/chromInfo.txt.gz
+
+bash-3.2$ fetchChromSizes mm10 > mm10.genome
+INFO: trying FTP /usr/bin/ftp for database mm10
+url: ftp://hgdownload.cse.ucsc.edu/goldenPath/mm10/database/chromInfo.txt.gz
+bash-3.2$ samtools view -b -F 1024 -q 3- GSM1341952.mm10.sorted.markdup.bam > GSM1341952m10.filtered.bam
+
+ >  scp someFile someUser@someServer:/somePath/someFile
+ > scp ~/GSM1341951.mm10.filtered.bam asplunter@mb07.science.ru.nl:~/asplunter/GSM1341951.mm10.filtered.mb07.bam
+ bash: /Users/AJ/GSM1341951.mm10.filtered.bam: Permission denied
+ 
+ Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341951.mm10.bam -savp -out=GSM1341951.ppqt.txt FSIZE=`cat GSM1341951.ppqt.txt | cut -f3 | cut -f1 -d,'
+ Rscript /phantompeakqualtools/run_spp.R -c=GSM1341951.mm10.bam -savp -out=GSM1341951.ppqt.txt FSIZE=`cat GSM1341951.ppqt.txt | cut -f3 | cut -f1 -d,'
+ 
+ 
+ Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341938.mm10.filtered.bam -savp -out=GSM1341938.ppqt.filtered.txt
+ #Works!!
+ Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341951.mm10.filtered.bam -savp -out=GSM1341951.ppqt.filtered.txt
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+################
+ChIP data: GSM1341951.mm10.filtered.bam 
+Control data: NA 
+strandshift(min): -500 
+strandshift(step): 5 
+strandshift(max) 1500 
+user-defined peak shift NA 
+exclusion(min): 10 
+exclusion(max): NaN 
+num parallel nodes: NA 
+FDR threshold: 0.01 
+NumPeaks Threshold: NA 
+Output Directory: . 
+narrowPeak output file name: NA 
+regionPeak output file name: NA 
+Rdata filename: NA 
+plot pdf filename: ./GSM1341951.mm10.filtered.pdf 
+result filename: GSM1341951.ppqt.filtered.txt 
+Overwrite files?: FALSE
+
+[1] TRUE
+Loading required package: caTools
+Reading ChIP tagAlign/BAM file GSM1341951.mm10.filtered.bam 
+opened /tmp/RtmphYK8hc/GSM1341951.mm10.filtered.tagAlign640355dc755
+done. read 21358796 fragments
+ChIP data read length 51 
+[1] TRUE
+Calculating peak characteristics
+Minimum cross-correlation value 0.2633442 
+Minimum cross-correlation shift 1500 
+Top 3 cross-correlation values 0.267620484191633,0.266039747609451,0.265756925840566 
+Top 3 estimates for fragment length 125,225,245 
+Window half size 540 
+Phantom peak location 50 
+Phantom peak Correlation 0.2671963 
+Normalized Strand cross-correlation coefficient (NSC) 1.016238 
+Relative Strand cross-correlation Coefficient (RSC) 1.110103 
+Phantom Peak Quality Tag 1 
+null device 
+          1 
+          
+$ SCALE=`samtools flagstat GSM1341938.mm10.filtered.bam | head -n 1 | awk '{print 1e6 / $1}'`
+
+bedtools bamtobed -i GSM1341938.mm10.filtered.bam | bedtools flank -l 0 -r 1 -s -g mm10.genome | bedtools slop -l 0 -r $(($FSIZE - 1)) -g mm10.
+genome -s | bedtools genomecov -i - -g mm10.genome -bg > GSM1341938.mm10.bg
+#Seems to work like this. Make sure mm10.genome is in same directory though.
+
+bedGraphToBigWig GSM1341938.mm10.bg mm10.genome GSM1341938.mm10.bw
+
+
+Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341938.mm10.filtered.bam -savp -out=GSM1341938.ppqt.filtered.txt
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+################
+ChIP data: GSM1341938.mm10.filtered.bam 
+Control data: NA 
+strandshift(min): -500 
+strandshift(step): 5 
+strandshift(max) 1500 
+user-defined peak shift NA 
+exclusion(min): 10 
+exclusion(max): NaN 
+num parallel nodes: NA 
+FDR threshold: 0.01 
+NumPeaks Threshold: NA 
+Output Directory: . 
+narrowPeak output file name: NA 
+regionPeak output file name: NA 
+Rdata filename: NA 
+plot pdf filename: ./GSM1341938.mm10.filtered.pdf 
+result filename: GSM1341938.ppqt.filtered.txt 
+Overwrite files?: FALSE
+
+[1] TRUE
+Loading required package: caTools
+Reading ChIP tagAlign/BAM file GSM1341938.mm10.filtered.bam 
+opened /tmp/RtmpBYKd4Z/GSM1341938.mm10.filtered.tagAlignd7556b17216e
+done. read 14040051 fragments
+ChIP data read length 51 
+[1] TRUE
+Calculating peak characteristics
+Warning messages:
+1: In min(x) : no non-missing arguments to min; returning Inf
+2: In max(x) : no non-missing arguments to max; returning -Inf
+3: In min(x) : no non-missing arguments to min; returning Inf
+4: In max(x) : no non-missing arguments to max; returning -Inf
+Minimum cross-correlation value 0.1881426 
+Minimum cross-correlation shift 1500 
+Top 3 cross-correlation values 0.196414982837932,0.196337394668008,0.191639400127589 
+Top 3 estimates for fragment length 155,170,355 
+Window half size 425 
+Phantom peak location 50 
+Phantom peak Correlation 0.1945773 
+Normalized Strand cross-correlation coefficient (NSC) 1.043969 
+Relative Strand cross-correlation Coefficient (RSC) 1.285593 
+Phantom Peak Quality Tag 1 
+null device 
+          1 
+
+scp ~/GSM1341952.mm10.filtered.bam asplunter@mb07.science.ru.nl:/data/www/share/asplunter/GSM1341952.mm10.filtered.bam
+samtools view -b -F 1024 -q 3- GSM1341952.mm10.sorted.markdup.bam > GSM1341952.mm10.filtered.bam
