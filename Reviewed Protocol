@@ -57,12 +57,37 @@ rm -f chr*.fa
 bwa index <short_genome_name>.fa 
 #example: <mm10>.fa
 
-"""Map reads of GSM1341951.trimmed.fastq.gz
+"""Map reads of <SampleID+file_name>.trimmed.fastq.gz""" 
 
-bwa aln -t 12 <short_genome_name.fa> | bwa samse mm10/mm10.fa - GSM1341951.trimmed.
-fastq.gz | samtools view -Sb - > GSM1341951.mm10.bam
+bwa aln -t 12 <PATH:short_genome_name.fa> | bwa samse <PATH:short_genome_name.fa> - 
+<SampleID+file_name>.trimmed.fastq.gz | samtools view -Sb - > 
+<SampleID+file_name>.<short_genome_name>.bam 
+#Leave out "Path:" just fill in the <short genome name.fa>
 #examle:bwa aln -t 12 mm10/mm10.fa | bwa samse mm10/mm10.fa - GSM1341951.trimmed.
 fastq.gz | samtools view -Sb - > GSM1341951.mm10.bam
 
+"""Sorting the .bam file by coordinate"""
 
+samtools sort -m <work_memory> <SampleID+file_name>.<short_genome_name>.bam > <SampleID+file_name>.<short_genome_name>.sorted.bam
+#example:samtools sort -m 12G GSM1341951.mm10.bam > GSM1341951.mm10.sorted.bam
 
+"""Mark duplicate reads using picard tools"""
+
+picard MarkDuplicates ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT I=<SampleID+file_name>.<short_genome_name>.sorted.bam 
+O=<SampleID+file_name>.<short_genome_name>.sorted.markdup.bam M=<SampleID+file_name>.<short_genome_name>.sorted.markdup.txt
+#remember picard tools only works on a linux environment
+#example: picard MarkDuplicates ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT I=GSM1341938.mm10.sorted.bam O=GSM1341938.mm10.sorted.mup.bam M=GSM1341938.mm10.sorted.markdup.txt
+
+"""Index the .bam file"""
+
+samtools index <SampleID+file_name>.<short_genome_name>.sorted.markdup.bam
+#example: samtools index GSM1341951.mm10.sorted.markdup.bam
+
+"""Estimate library complexity"""
+
+samtools flagstat <SampleID+file_name>.<short_genome_name>.sorted.markdup.bam
+example: samtools flagstat GSM1341951.mm10.sorted.markdup.bam
+
+"""Do all previous steps for all files that you wish to analyse before continuing"""
+
+"""Visualisation of ChIP-seq Data"""
