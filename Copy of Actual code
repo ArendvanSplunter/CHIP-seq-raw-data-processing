@@ -229,16 +229,16 @@ Phantom Peak Quality Tag 1
 null device 
           1 
           
-$ SCALE=`samtools flagstat GSM1341938.mm10.filtered.bam | head -n 1 | awk '{print 1e6 / $1}'`
+$ SCALE=`samtools flagstat GSM1341952.mm10.filtered.bam | head -n 1 | awk '{print 1e6 / $1}'`
 
-bedtools bamtobed -i GSM1341938.mm10.filtered.bam | bedtools flank -l 0 -r 1 -s -g mm10.genome | bedtools slop -l 0 -r $(($FSIZE - 1)) -g mm10.
-genome -s | bedtools genomecov -i - -g mm10.genome -bg > GSM1341938.mm10.bg
+bedtools bamtobed -i GSM1341952.mm10.filtered.bam | bedtools flank -l 0 -r 1 -s -g mm10.genome | bedtools slop -l 0 -r $(($FSIZE - 1)) -g mm10.
+genome -s | bedtools genomecov -i - -g mm10.genome -bg > GSM1341952.mm10.bg
 #Seems to work like this. Make sure mm10.genome is in same directory though.
 
-bedGraphToBigWig GSM1341938.mm10.bg mm10.genome GSM1341938.mm10.bw
+bedGraphToBigWig GSM1341952.mm10.bg mm10.genome GSM1341952.mm10.bw
 
 
-Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341938.mm10.filtered.bam -savp -out=GSM1341938.ppqt.filtered.txt
+Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341952.mm10.filtered.bam -savp -out=GSM1341952.ppqt.filtered.txt
 During startup - Warning message:
 Setting LC_CTYPE failed, using "C" 
 ################
@@ -289,3 +289,11 @@ null device
 
 scp ~/GSM1341952.mm10.filtered.bam asplunter@mb07.science.ru.nl:/data/www/share/asplunter/GSM1341952.mm10.filtered.bam
 samtools view -b -F 1024 -q 3- GSM1341952.mm10.sorted.markdup.bam > GSM1341952.mm10.filtered.bam
+
+bedtools bamtobed -i GSM1341952.mm10.filtered.bam | grep -v chrUn | bedtools flank -l 0 -r 1 -s -g mm10.genome | 
+bedtools slop -l 0 -r $(($FSIZE - 1)) -g mm10.genome -s | bedtools genomecov -i - -g mm10.genome -bg > GSM1341952.mm10.bg
+Error: malformed BED entry at line 33891633. Start was greater than end. Exiting.
+chr1    72941322        72941373        SRR1185474.33891633     37      + (Value:33891633)
+chrUn_GL456394  24272   24323   SRR1185474.2673150      37      + (Line:33891633)
+
+bedtools bamtobed -i GSM1341952.mm10.filtered.bam | grep -v chrUn | bedtools flank -l 0 -r 1 -s -g mm10.genome | bedtools slop -l 0 -r $(($FSIZE - 1)) -g mm10.genome -s | bedtools genomecov -i - -g mm10.genome -bg > GSM1341952.mm10.bg
