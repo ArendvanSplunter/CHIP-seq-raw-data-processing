@@ -354,6 +354,62 @@ SCALE=`samtools flagstat GSM1341951.mm10.filtered.bam |head -n 1 | awk '{print 1
 bedtools bamtobed -i GSM1341951.mm10.filtered.bam | bedtools flank -l 0 -r 1 -s -g mm10.genome | bedtools slop -l 0 -r $(($FSIZE - 1)) -g mm10.genome -s | bedtools genomecov -i - -g mm10.genome -bg > GSM1341951.mm10.2e.bg
 bedGraphToBigWig GSM1341951.mm10.2e.bg mm10.genome GSM1341951.2e.mm10.bw
 
-scp asplunter@mb07.science.ru.nl:~/asplunter/GSM1341951.2e.mm10.bw asplunter@mb07.science.ru.nl:/data/www/share/asplunter/GSM1341951.2e.mm10.bw
-
+scp GSM1341951.mm10.2e.filtered.bw asplunter@mb07.science.ru.nl:/data/www/share/asplunter/GSM1341951.mm10.2e.filtered.bw
+scp asplunter@mb07.science.ru.nl:~/GSM1341951.mm10.2e.filtered.track.txt GSM1341951.mm10.2e.filtered.track.txt 
 Connection closed by 131.174.31.33
+
+Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341952.mm10.bam -savp -out=GSM1341952.mm10.bam.ppqt.txt  
+
+Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341952.mm10.filtered2.bam -savp -out=GSM1341952.filtered.ppqt.txt  
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+################
+ChIP data: GSM1341952.mm10.filtered2.bam 
+Control data: NA 
+strandshift(min): -500 
+strandshift(step): 5 
+strandshift(max) 1500 
+user-defined peak shift NA 
+exclusion(min): 10 
+exclusion(max): NaN 
+num parallel nodes: NA 
+FDR threshold: 0.01 
+NumPeaks Threshold: NA 
+Output Directory: . 
+narrowPeak output file name: NA 
+regionPeak output file name: NA 
+Rdata filename: NA 
+plot pdf filename: ./GSM1341952.mm10.filtered2.pdf 
+result filename: GSM1341952.filtered.ppqt.txt 
+Overwrite files?: FALSE
+
+[1] TRUE
+Loading required package: caTools
+Reading ChIP tagAlign/BAM file GSM1341952.mm10.filtered2.bam 
+[W::bam_hdr_read] EOF marker is absent. The input is probably truncated.
+[main_samview] truncated file.
+opened /tmp/Rtmp7Nema2/GSM1341952.mm10.filtered2.tagAlignb059762c9a81
+done. read 21984808 fragments
+ChIP data read length 51 
+[1] TRUE
+Calculating peak characteristics
+Warning message:
+In max(ccl.av$x[ccl.av$y >= th]) :
+  no non-missing arguments to max; returning -Inf
+Minimum cross-correlation value  
+Minimum cross-correlation shift  
+Top 3 cross-correlation values NA 
+Top 3 estimates for fragment length NA 
+Warning message:
+In max(crosscorr$cross.correlation$x[crosscorr$cross.correlation$y >=  :
+  no non-missing arguments to max; returning -Inf
+Window half size -Inf 
+Phantom peak location  
+Phantom peak Correlation  
+Normalized Strand cross-correlation coefficient (NSC)  
+Relative Strand cross-correlation Coefficient (RSC)  
+Error in if ((crosscorr$rel.phantom.coeff >= 0) & (crosscorr$rel.phantom.coeff <  : 
+  argument is of length zero
+Execution halted
+
+
