@@ -1,0 +1,86 @@
+Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341951.mm10.filtered.bam -savp -rf -out=GSM1341951.2e.mm10.filtered.bam.ppqt.txt 
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+################
+ChIP data: GSM1341951.mm10.filtered.bam 
+Control data: NA 
+strandshift(min): -500 
+strandshift(step): 5 
+strandshift(max) 1500 
+user-defined peak shift NA 
+exclusion(min): 10 
+exclusion(max): NaN 
+num parallel nodes: NA 
+FDR threshold: 0.01 
+NumPeaks Threshold: NA 
+Output Directory: . 
+narrowPeak output file name: NA 
+regionPeak output file name: NA 
+Rdata filename: NA 
+plot pdf filename: ./GSM1341951.mm10.filtered.pdf 
+result filename: GSM1341951.2e.mm10.filtered.bam.ppqt.txt 
+Overwrite files?: TRUE
+
+[1] TRUE
+Loading required package: caTools
+Reading ChIP tagAlign/BAM file GSM1341951.mm10.filtered.bam 
+opened /tmp/RtmpIu27T6/GSM1341951.mm10.filtered.tagAligna0871f3f59d5
+done. read 21358796 fragments
+ChIP data read length 51 
+[1] TRUE
+Calculating peak characteristics
+Minimum cross-correlation value 0.2633442 
+Minimum cross-correlation shift 1500 
+Top 3 cross-correlation values 0.267620484191633,0.266039747609451,0.265756925840566 
+Top 3 estimates for fragment length 125,225,245 
+Window half size 540 
+Phantom peak location 50 
+Phantom peak Correlation 0.2671963 
+Normalized Strand cross-correlation coefficient (NSC) 1.016238 
+Relative Strand cross-correlation Coefficient (RSC) 1.110103 
+Phantom Peak Quality Tag 1 
+null device 
+          1 
+asplunter@mb07 ~ $ FSIZE=`cat GSM1341951.ppqt.txt | cut -f3 | cut -f1 -d,`
+asplunter@mb07 ~ $ SCALE=`samtools flagstat GSM1341951.mm10.filtered.bam |head -n 1 | awk '{print 1e6 / $1}'`
+asplunter@mb07 ~ $ FSIZE=`cat GSM1341951.mm10.filtered.bam.ppqt.txt | cut -f3 | cut -f1 -d,`
+cat: GSM1341951.mm10.filtered.bam.ppqt.txt: No such file or directory
+asplunter@mb07 ~ $ ls
+GSM1341938.mm10.bg                        GSM1341951.ppqt.txt
+GSM1341938.mm10.bw                        GSM1341952.mm10.bam
+GSM1341938.mm10.filtered.bam              GSM1341952.mm10.bg
+GSM1341938.mm10.filtered.pdf              GSM1341952.mm10.bw
+GSM1341938.ppqt.filtered.txt              GSM1341952.mm10.filtered.bam
+GSM1341951.2.mm10.bg                      GSM1341952.mm10.filtered.pdf
+GSM1341951.2e.mm10.bw                     GSM1341952.mm10.filtered.test.bam
+GSM1341951.2e.mm10.filtered.bam.ppqt.txt  GSM1341952.mm10.filtered2.bam
+GSM1341951.mm10.2e.bg                     GSM1341952.mm10.test.bg
+GSM1341951.mm10.bam                       GSM1341952.ppqt.filtered.txt
+GSM1341951.mm10.bg                        R
+GSM1341951.mm10.bw                        error.33891633.test.txt
+GSM1341951.mm10.filtered.bam              error.txt
+GSM1341951.mm10.filtered.pdf              mm10.genome
+GSM1341951.mm10.pdf                       phantompeakqualtools
+GSM1341951.mm10.track.txt                 scp
+GSM1341951.ppqt.filtered.txt
+asplunter@mb07 ~ $ FSIZE=`cat GSM1341951.2e.mm10.filtered.bam.ppqt.txt | cut -f3 | cut -f1 -d,`
+asplunter@mb07 ~ $ SCALE=`samtools flagstat GSM1341951.mm10.filtered.bam GSM1341951.mm10.filtered.bam^Cead -n 1 | awk '{print 1e6 / $1}'`
+asplunter@mb07 ~ $ bedtools bamtobed -i GSM1341951.mm10.filtered.bam | bedtools flank -l 0 -r 1 -s -g mm10.genome | bedtools slop -l 0 -r $(($FSIZE - 1)) -g mm10.genome -s | bedtools genomecov -i - -g mm10.genome -bg > GSM1341951.mm10.2e.filtered.bg
+asplunter@mb07 ~ $ bedGraphToBigWig GSM1341951.mm10.2e.filtered.bg mm10.genome GSM1341951.mm10.2e.filtered.bw
+asplunter@mb07 ~ $ scp GSM1341951.mm10.2e.filtered.bw asplunter@mb07.science.ru.nl:/data/www/share/asplunter/GSM1341951.mm10.2e.filtered.bw
+Password: 
+GSM1341951.mm10.2e.filtered.bw      100%  207MB 206.5MB/s 111.7MB/s   00:01    
+asplunter@mb07 ~ $ nano GSM1341951.mm10.2e.filtered.bw
+asplunter@mb07 ~ $ nano GSM1341951.mm10.2e.filtered.bw
+asplunter@mb07 ~ $ nano GSM1341951.mm10.2e.filtered.track.txt
+asplunter@mb07 ~ $ logout
+Connection to mb07.science.ru.nl closed.
+n027139:~ AJ$ scp scp GSM1341951.mm10.2e.filtered.bw asplunter@mb07.science.ru.nl:/data/www/share/asplunter/GSM1341951.mm10.2e.filtered.bw
+n027139:~ AJ$ bash
+bash-3.2$ scp asplunter@mb07.science.ru.nl:/data/www/share/asplunter/GSM1341951.mm10.2e.filtered.track.txt GSM1341951.mm10.2e.filtered.track.txt
+Password: 
+scp: /data/www/share/asplunter/GSM1341951.mm10.2e.filtered.track.txt: No such file or directory
+bash-3.2$ scp asplunter@mb07.science.ru.nl:~/GSM1341951.mm10.2e.filtered.track.txt GSM1341951.mm10.2e.filtered.track.txt 
+Password: 
+GSM1341951.mm10.2e.filtered.track.txt         100%  205     0.2KB/s   00:00    
+bash-3.2$ 
