@@ -412,4 +412,35 @@ Error in if ((crosscorr$rel.phantom.coeff >= 0) & (crosscorr$rel.phantom.coeff <
   argument is of length zero
 Execution halted
 
+macs2 callpeak -t GSM1341951.mm10.filtered.bam -c GSM1341937.mm10.filtered.bam -f BAM -g mm -n H3K27me3_untreated_rep1 --extsize
+$FSIZE --broad -q 0.01
+FSIZE=`cat GSM1341938.ppqt.filtered.txt | cut -f3 | cut -f1 -d,`
 
+macs2 callpeak -t GSM1341951.mm10.filtered.bam -c GSM1341938.mm10.filtered.bam -f BAM -g mm -n H3K27me3_untreated_rep1 --extsize `cat GSM1341951.ppqt.txt | cut -f3 | cut -f1 -d,` --broad -q 0.01
+
+SCALE=`samtools flagstat GSM1341938.mm10.filtered.bam | head -n 1 | awk '{print 1e6 / $1}'`
+
+sed -i ’1s/^/track name=H3K27me3_untreated_rep1_peaks\n/’ H3K27me3_untreated_rep1_peaks.broad.bed
+
+sed -i '1s/^/track name=H3K27me3_untreated_rep2_peaks\n/' H3K27me3_untreated_rep2_broad_peaks.bed
+
+cut -f1-3,9 H3K27me3_untreated_rep1.broad-Peak > H3K27me3_untreated_rep1.broad.bed
+
+""" Redone from macs2 on because both replica's of H3K27me3 looked wrong and exactly the same"""
+macs2 callpeak -t GSM1341952.mm10.filtered.bam -c GSM1341938.mm10.filtered.bam -f BAM -g mm -n H3K27me3_untreated_rep2 --extsize=`cat GSM1341952.ppqt.txt | cut -f3 | cut -f1 -d,` --broad -q 0.01
+
+cut -f1-3,9 H3K27me3_untreated_rep2_broad_peaks.bed > H3K27me3_untreated_rep2_2e.broad.bed
+
+sed -i ’1s/^/track name=H3K27me3_untreated_rep2_peaks_test2\n/’ H3K27me3_untreated_rep2_test_broad_peaks.bed
+
+scp asplunter@mb07.science.ru.nl:~/H3K27me3_untreated_rep2_test_broad_peaks.bed H3K27me3_untreated_rep2_test_broad_peaks.bed 
+
+"""redone for the second replicate"""
+
+macs2 callpeak -t GSM1341952.mm10.filtered.test.bam -c GSM1341938.mm10.filtered.bam -f BAM -g mm -n H3K27me3_untreated_rep2_test --extsize `cat GSM1341952.mm10.filtered.test.ppqt.txt | cut -f3 | cut -f1 -d,` --broad -q 0.01
+
+"""The new peak calls look very good and overlap well with the CHIP-seq domains"""
+
+"""done it all from and including cut command, because possibly not having performed a cut command last time"""
+
+scp asplunter@mb07.science.ru.nl:~/H3K27me3_untreated_rep1.2e.broad.bed H3K27me3_untreated_rep1.2e.broad.bed
