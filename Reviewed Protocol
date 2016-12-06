@@ -86,8 +86,96 @@ samtools index <SampleID+file_name>.<short_genome_name>.sorted.markdup.bam
 """Estimate library complexity"""
 
 samtools flagstat <SampleID+file_name>.<short_genome_name>.sorted.markdup.bam
-example: samtools flagstat GSM1341951.mm10.sorted.markdup.bam
+#example: samtools flagstat GSM1341951.mm10.sorted.markdup.bam
 
 """Do all previous steps for all files that you wish to analyse before continuing"""
 
 """Visualisation of ChIP-seq Data"""
+
+"""Aquire a reference genome to map the reads to"""
+
+fetchChromSIzes <reference_genome> > <reference_genome>.genome
+#example: fetchChromSizes mm10 > mm10.genome
+
+"""Filtering of non-unique(and duplicate) reads with samtools"""
+
+samtools view -b -F 1024 -q 30 <SampleID+file_name>.<short_genome_name>.sorted.markdup.bam ><SampleID+file_name>.<short_genome_name>.filtered.bam 
+#example: samtools view -b -F 1024 -q 30 GSM1341951.mm10.sorted.markdup.bam > GSM1341951.mm10.filtered.bam
+
+
+"""Estimate fragment length with phantompeakqualtools"""
+
+Rscript <Rscript_PATH>/run.spp.R -c=<SampleID+file_name>.<short_genome_name>.filtered.bam -savp -out=<SampleID+file_name>.ppqt.txt
+#example: Rscript /opt/phantompeakqualtools/run_spp.R -c=GSM1341951.mm10.bam -savp -out=GSM1341951.ppqt.txt
+
+FSIZE=`cat <SampleID+file_name>.ppqt.txt | cut -f3 | cut -f1 -d,`
+#example: FSIZE=`cat GSM1341951.ppqt.txt | cut -f3 | cut -f1 -d,`
+
+"""Determining scaling factor"""
+
+SCALE=`samtools flagstat <SampleID+file_name>.<short_genome_name>.filtered.bam | head -n 1 | awk '{print 1e6 / $1}'`
+#example: SCALE=`samtools flagstat GSM1341951.mm10.filtered.bam | head -n 1 | awk '{print 1e6 / $1}'`
+
+"""Generating a genome coverage bedGraph file with reads=estimated fragment size, normalized by million mapped reads"""
+
+bedtools bamtobed -i <SampleID+file_name>.<short_genome_name>.filtered.bam | grep -v chrUn | bedtools flank -l 0 -r 1 -s -g <short_genome_name>.genome | bedtools slop -l 0 -r $(($FSIZE - 1)) -g <short_genome_name>.genome -s | bedtools genomecov -i - -g <short_genome_name>.genome -bg > <SampleID+file_name>.<short_genome_name>.bg 
+#example: bedtools bamtobed -i GSM1341951.mm10.filtered.bam bedtools flank -l 0 -r 1 -s -g mm10.genome bedtools slop -l 0 -r $(($FSIZE - 1)) -g mm10.genome -s | bedtools genomecov -i - -g mm10.genome -bg > GSM1341951.mm10.filtered.bg
+
+"""Converting bedGraph to bigWig (genome browser visualisation)"""
+
+bedGraphToBigWig <SampleID+file_name>.<short_genome_name>.filtered.bg <short_genome_name>.genome <SampleID+file_name>.<short_genome_name>.filtered.bw
+#example: bedGraphToBigWig GSM1341951.mm10.bg mm10.genome GSM1341951.mm10.bw
+
+"""Upload the bw file to /data/www/share/asplunter/ while logged in to MB07 and in asplunter directory"""
+
+scp <SampleID+file_name>.<short_genome_name>.filtered.bw asplunter@mb07.science.ru.nl:/data/www/share/asplunter/<SampleID+file_name>.<short_genome_name>.filtered.bw
+#example: scp GSM1341951.mm10.filtered.bw asplunter@mb07.science.ru.nl:/data/www/share/asplunter/GSM1341951.mm10.filtered.bw
+
+"""Repeat these last steps for all datasets you wish to analyze"""
+
+"""Create a "track definition file" open nano and add one or more lines like the following"""
+
+nano <name_epigenetic_mark_replica#>.txt
+
+track type=bigWig name=<name_epigenetic_mark_replica#> bigDataUrl=http:mbdata.science.ru.nl/share/asplunter/<SampleID+file_name>.<short_genome_name>.filtered.bw color=#,#,# autoScale=on visibility=full maxHeightPixels=128:32:11
+#example: track type=bigWig name=H3K27me3_repl1 bigDataUrl=http://url/to/files/GSM1341951.mm10.bw color=228,26,28 autoScale=on visibility=full maxHeightPixels=128:32:11
+#note: make sure that the whole track is on one line.
+
+"""Check the mapped reads of the bigWig file by uploading it to the genome browser indirectly via the "track definition file""""
+
+"""Upload <name_epigenetic_mark_replica#>.txt as a custom track and view in genome browser, check representative regions for epigenetic mark (Hox genes for H3K27me3)"""
+
+"""Call peaks using MACS2 (0/1 track in stead of read depth track like .bw file)"""
+
+macs2 callpeak -t <SampleID+file_name>.<short_genome_name>.filtered.bam -c <Reference_Sample+file_name>.<short_genome_name>.filtered.bam -f BAM -g mm -n <name_epigenetic_mark_replica#> --extsize | FSIZE --broad -q 0.01
+#example: macs2 callpeak -t GSM1341951.mm10.filtered.bam -c GSM1341938.mm10.filtered.bam -f BAM -g mm -n H3K27me3_untreated_rep1 --extsize | FSIZE --broad -q 0.01
+#note: FSIZE=`cat <SampleID+file_name>.ppqt.txt | cut -f3 | cut -f1 -d,`
+
+"""Create a BED file of the peaks with the -log10(q-value) in the fourth column"""
+
+cut -f1-3,9 <name_epigenetic_mark_replica#>_broad_peaks > <name_epigenetic_mark_replica#>.broad.bed
+#example: cut -f1-3,9 H3K27me3_untreated_rep1_broad_peaks > H3K27me3_untreated_rep1.broad.bed
+
+"""Add the track line(track definition file) to the top of the BED file"""
+
+sed -i\’1s/^/track name=<name_epigenetic_mark_replica#_peaks>\n/’ <name_epigenetic_mark_replica#>.broad.bed
+#example: sed -i ’1s/^/track name=H3K27me3_untreated_rep1_peaks\n/’ H3K27me3_untreated_rep1_peaks.broad.bed
+#note: tends not to work when copying the commandline to terminal, have to write it by hand for some reason.
+
+"""Download the BED file to own device in order to upload it to UCSC genome browser"""
+
+scp asplunter@mb07.science.ru.nl:~/<name_epigenetic_mark_replica#>.peaks.broad.bed <name_epigenetic_mark_replica#>.peaks.broad.bed
+#example: scp asplunter@mb07.science.ru.nl:~/H3K27me3_untreated_rep2_test_broad_peaks.bed H3K27me3_untreated_rep2_test_broad_peaks.bed 
+
+"""Upload the BED file to the UCSC Browser with add custom tracks"""
+
+"""Visually compare the peaks to the ChIP-seq profile (.bw file or reads), Evaluate the peak calls"""
+
+"""Repeat MACS2 call peak step and increase or decrease the q-value cutoff to change the selection criteria for the peaks"""
+
+"""Repeat the steps for the other databases and replica's"""
+
+"""Create a set of reproducible peaks by pooling the replica's"""
+
+bedtools intersect -a <name_epigenetic_mark_replica1>.broad.bed -b <name_epigenetic_mark_replica2>.broad.bed > <name_epigenetic_mark>_untreated.peaks.bed
+example: bedtools intersect -a H3K27me3_untreated_rep1.broad.bed -b H3K27me3_untreated_rep2.broad.bed > H3K27me3_untreated.peaks.bed
