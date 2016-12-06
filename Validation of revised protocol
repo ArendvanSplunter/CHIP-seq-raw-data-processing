@@ -1,0 +1,59 @@
+asplunter@mb07 ~ $ ls
+Mus_musculus_ESC     SRR3931103.fastq.gz      error.txt
+Mus_musculus_heart   SRR3931109.fastq.gz      ncbi
+Protocol_test_files  SRR3931109.sra           phantompeakqualtools
+R                    error.33891633.test.txt  scp
+asplunter@mb07 ~ $ mv SRR3931103.fastq.gz GSM2242113.fastq.gz 
+asplunter@mb07 ~ $ ls
+GSM2242113.fastq.gz  R                        error.txt
+Mus_musculus_ESC     SRR3931109.fastq.gz      ncbi
+Mus_musculus_heart   SRR3931109.sra           phantompeakqualtools
+Protocol_test_files  error.33891633.test.txt  scp
+asplunter@mb07 ~ $ mkdir fastqc.out
+asplunter@mb07 ~ $ ls
+GSM2242113.fastq.gz  R                        error.txt             scp
+Mus_musculus_ESC     SRR3931109.fastq.gz      fastqc.out
+Mus_musculus_heart   SRR3931109.sra           ncbi
+Protocol_test_files  error.33891633.test.txt  phantompeakqualtools
+asplunter@mb07 ~ $ fastqc GSM2242113.fastq.gz.fastq.gz -o fastqc.out
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LC_CTYPE = "UTF-8",
+	LANG = (unset)
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+Skipping 'GSM2242113.fastq.gz.fastq.gz' which didn't exist, or couldn't be read
+asplunter@mb07 ~ $ fastqc GSM2242113.fastq.gz -o fastqc.out
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LC_CTYPE = "UTF-8",
+	LANG = (unset)
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+Started analysis of GSM2242113.fastq.gz
+Approx 5% complete for GSM2242113.fastq.gz
+Approx 10% complete for GSM2242113.fastq.gz
+Approx 15% complete for GSM2242113.fastq.gz
+Approx 20% complete for GSM2242113.fastq.gz
+Approx 25% complete for GSM2242113.fastq.gz
+Approx 30% complete for GSM2242113.fastq.gz
+Approx 35% complete for GSM2242113.fastq.gz
+Approx 40% complete for GSM2242113.fastq.gz
+Approx 45% complete for GSM2242113.fastq.gz
+Approx 50% complete for GSM2242113.fastq.gz
+Approx 55% complete for GSM2242113.fastq.gz
+Approx 60% complete for GSM2242113.fastq.gz
+Approx 65% complete for GSM2242113.fastq.gz
+Approx 70% complete for GSM2242113.fastq.gz
+Approx 75% complete for GSM2242113.fastq.gz
+Approx 80% complete for GSM2242113.fastq.gz
+Approx 85% complete for GSM2242113.fastq.gz
+Approx 90% complete for GSM2242113.fastq.gz
+Approx 95% complete for GSM2242113.fastq.gz
+Analysis complete for GSM2242113.fastq.gz
+Fontconfig warning: ignoring UTF-8: not a valid region tag
+asplunter@mb07 ~ $ 
