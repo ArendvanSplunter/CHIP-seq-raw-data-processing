@@ -27,7 +27,10 @@ mkdir fastqc.out
 fastqc *.fastq.gz -o fastqc.out
 #excute the fastqc function on your .fastq.gz file and place the results in the directory fastqc.out.
 
-trimmomatic-0.32.jar SE <SampleID+file_name>.fastq.gz  <SampleID+file_name>.trimmed.fastq.gz
+"""Make sure that you have the Trimmomatic files in your execution folder or a known location on the server"""
+#Also the apapters should be there.
+
+trimmomatic-0.36.jar SE <SampleID+file_name>.fastq.gz  <SampleID+file_name>.trimmed.fastq.gz ILLUMINACLIP:TruSeq3-SE.fa:2:30:10
 #example:<GSM1341951>
 
 """Do all previous steps for all files that you wish to analyse before continuing."""
@@ -41,12 +44,13 @@ mkdir <short_genome_name>
 cd <short_genome_name>
 
 wget <URL_of_chosen_genome>
+#wget --timestamping 'ftp://hgdownload.cse.ucsc.edu/goldenPath/mm10/bigZips/chromFa.tar.gz' -O chromFa.tar.gz
 #example: <http://hgdownload.cse.ucsc.edu/golden-Path/mm10/bigZips/chromFa.tar.gz>
 
-tar cvzf <name_of_fasta_file_of_chosen_genome.tar.gz> 
+tar xvzf <file>.tar.gz
 #example: <chromFa.tar.gz>
 
-cat *.fa <short_genome_name>.fa
+cat *.fa > <short_genome_name>.fa
 
 """Optionally delete seperate chromosome .fa files."""
 
