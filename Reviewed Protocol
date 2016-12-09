@@ -63,7 +63,7 @@ bwa index <short_genome_name>.fa
 
 """Map reads of <SampleID+file_name>.trimmed.fastq.gz""" 
 
-bwa aln -t 12 <PATH:short_genome_name.fa> | bwa samse <PATH:short_genome_name.fa> - 
+bwa aln -t 12 <PATH:short_genome_name.fa> <SampleID+file_name>.trimmed.fastq.gz | bwa samse <PATH:short_genome_name.fa> - 
 <SampleID+file_name>.trimmed.fastq.gz | samtools view -Sb - > 
 <SampleID+file_name>.<short_genome_name>.bam 
 #Leave out "Path:" just fill in the <short genome name.fa>
@@ -72,8 +72,8 @@ fastq.gz | samtools view -Sb - > GSM1341951.mm10.bam
 
 """Sorting the .bam file by coordinate"""
 
-samtools sort -m <work_memory> <SampleID+file_name>.<short_genome_name>.bam > <SampleID+file_name>.<short_genome_name>.sorted.bam
-#example:samtools sort -m 12G GSM1341951.mm10.bam > GSM1341951.mm10.sorted.bam
+samtools sort -m <work_memory> <SampleID+file_name>.<short_genome_name>.bam <SampleID+file_name>.<short_genome_name>.sorted.bam
+#example:samtools sort -m 12G GSM1341951.mm10.bam GSM1341951.mm10.sorted.bam
 
 """Mark duplicate reads using picard tools"""
 
