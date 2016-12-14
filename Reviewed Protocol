@@ -64,8 +64,7 @@ bwa index <short_genome_name>.fa
 """Map reads of <SampleID+file_name>.trimmed.fastq.gz""" 
 
 bwa aln -t 12 <PATH:short_genome_name.fa> <SampleID+file_name>.trimmed.fastq.gz | bwa samse <PATH:short_genome_name.fa> - 
-<SampleID+file_name>.trimmed.fastq.gz | samtools view -Sb - > 
-<SampleID+file_name>.<short_genome_name>.bam 
+<SampleID+file_name>.trimmed.fastq.gz | samtools view -Sb - > <SampleID+file_name>.<short_genome_name>.bam 
 #Leave out "Path:" just fill in the <short genome name.fa>
 #examle:bwa aln -t 12 mm10/mm10.fa | bwa samse mm10/mm10.fa - GSM1341951.trimmed.
 fastq.gz | samtools view -Sb - > GSM1341951.mm10.bam
@@ -95,6 +94,9 @@ samtools flagstat <SampleID+file_name>.<short_genome_name>.sorted.markdup.bam
 """Do all previous steps for all files that you wish to analyse before continuing"""
 
 """Visualisation of ChIP-seq Data"""
+
+#installation of the fetchChromSizes tool
+conda install -c bioconda ucsc-fetchchromsizes=332
 
 """Aquire a reference genome to map the reads to"""
 
